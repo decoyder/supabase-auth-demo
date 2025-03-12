@@ -1,8 +1,14 @@
 "use client";
 
+import type { TLoginFormSchema } from "@/lib/constants";
+
 import { zodResolver } from "@hookform/resolvers/zod";
+import { isEmpty } from "lodash-es";
+import { Mail } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 
+import { loginAction } from "@/actions/supabase";
 import { Button } from "@/components/ui/button";
 import {
     Card,
@@ -22,18 +28,12 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-
-import { loginAction } from "@/actions/supabase";
 import {
     CLIENT_ROUTES,
     EServerResponseCode,
     LoginFormSchema,
-    TLoginFormSchema,
 } from "@/lib/constants";
 import { createClient } from "@/utils/supabase/client";
-import { isEmpty } from "lodash-es";
-import { Mail } from "lucide-react";
-import { useSearchParams } from "next/navigation";
 
 export default function LoginForm() {
     const form = useForm<TLoginFormSchema>({
@@ -63,6 +63,7 @@ export default function LoginForm() {
     const searchParams = useSearchParams();
     const next = searchParams.get("next");
     const supabase = createClient();
+
     async function signInWithGoogle() {
         try {
             const { error } = await supabase.auth.signInWithOAuth({
@@ -78,8 +79,7 @@ export default function LoginForm() {
                 throw error;
             }
         } catch (error) {
-            alert("There was an error logging in with Google."),
-                console.error(error);
+            console.error(error);
         }
     }
 
@@ -94,8 +94,8 @@ export default function LoginForm() {
             <CardContent>
                 <Form {...form}>
                     <form
-                        onSubmit={form.handleSubmit(onSubmit)}
                         className="space-y-6"
+                        onSubmit={form.handleSubmit(onSubmit)}
                     >
                         <FormField
                             control={form.control}
@@ -133,19 +133,19 @@ export default function LoginForm() {
                         />
                         <div className="flex items-center justify-end">
                             <Button
-                                variant="link"
                                 className="px-0 font-normal"
                                 type="button"
+                                variant="link"
                             >
                                 <a
-                                    href={CLIENT_ROUTES.FORGOT_PASSWORD}
                                     className="text-primary font-medium hover:underline"
+                                    href={CLIENT_ROUTES.FORGOT_PASSWORD}
                                 >
                                     Forgot password?
                                 </a>
                             </Button>
                         </div>
-                        <Button type="submit" className="w-full">
+                        <Button className="w-full" type="submit">
                             Sign in
                         </Button>
 
@@ -159,12 +159,12 @@ export default function LoginForm() {
                         </div>
 
                         <Button
+                            className="w-full"
                             type="button"
                             variant="outline"
-                            className="w-full"
                             onClick={() => signInWithGoogle()}
                         >
-                            <Mail size={16} className="mr-2" />
+                            <Mail className="mr-2" size={16} />
                             Sign in with Google
                         </Button>
                     </form>
@@ -172,10 +172,10 @@ export default function LoginForm() {
             </CardContent>
             <CardFooter className="flex justify-center border-t pt-6">
                 <p className="text-sm text-muted-foreground">
-                    Don't have an account?{" "}
+                    {"Don't have an account? "}
                     <a
-                        href={CLIENT_ROUTES.SIGNUP}
                         className="text-primary font-medium hover:underline"
+                        href={CLIENT_ROUTES.SIGNUP}
                     >
                         Sign up
                     </a>

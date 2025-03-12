@@ -2,6 +2,8 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { isEmpty } from "lodash-es";
+import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -21,16 +23,13 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-
+import { resetPasswordAction } from "@/actions/supabase";
 import {
-    TResetPasswordFormSchema,
-    ResetPasswordFormSchema,
+    type TResetPasswordFormSchema,
     CLIENT_ROUTES,
     EServerResponseCode,
+    ResetPasswordFormSchema,
 } from "@/lib/constants";
-import { resetPasswordAction } from "@/actions/supabase";
-import { isEmpty } from "lodash-es";
-import { useRouter } from "next/navigation";
 
 export default function ResetPasswordForm() {
     const router = useRouter();
@@ -53,7 +52,7 @@ export default function ResetPasswordForm() {
                 response.code !== EServerResponseCode.SUCCESS
             ) {
                 alert(response.message);
-                console.log(response.error);
+                console.error(response.error);
             } else {
                 form.reset();
                 alert(response.message);
@@ -74,8 +73,8 @@ export default function ResetPasswordForm() {
             <CardContent>
                 <Form {...form}>
                     <form
-                        onSubmit={form.handleSubmit(onSubmit)}
                         className="space-y-6"
+                        onSubmit={form.handleSubmit(onSubmit)}
                     >
                         <FormField
                             control={form.control}
@@ -117,7 +116,7 @@ export default function ResetPasswordForm() {
                                 </FormItem>
                             )}
                         />
-                        <Button type="submit" className="w-full">
+                        <Button className="w-full" type="submit">
                             Save
                         </Button>
                     </form>

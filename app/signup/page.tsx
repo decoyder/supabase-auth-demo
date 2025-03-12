@@ -1,8 +1,12 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { isEmpty } from "lodash-es";
+import { Mail } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 
+import { signupAction } from "@/actions/supabase";
 import { Button } from "@/components/ui/button";
 import {
     Card,
@@ -23,18 +27,13 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-
-import { signupAction } from "@/actions/supabase";
 import {
     CLIENT_ROUTES,
     EServerResponseCode,
     SignupFormSchema,
-    TSignupFormSchema,
+    type TSignupFormSchema,
 } from "@/lib/constants";
 import { createClient } from "@/utils/supabase/client";
-import { isEmpty } from "lodash-es";
-import { Mail } from "lucide-react";
-import { useSearchParams } from "next/navigation";
 
 export default function SignupForm() {
     const form = useForm<TSignupFormSchema>({
@@ -69,6 +68,7 @@ export default function SignupForm() {
     const searchParams = useSearchParams();
     const next = searchParams.get("next");
     const supabase = createClient();
+
     async function signInWithGoogle() {
         try {
             const { error } = await supabase.auth.signInWithOAuth({
@@ -84,8 +84,7 @@ export default function SignupForm() {
                 throw error;
             }
         } catch (error) {
-            alert("There was an error logging in with Google."),
-                console.error(error);
+            console.error(error);
         }
     }
 
@@ -100,8 +99,8 @@ export default function SignupForm() {
             <CardContent>
                 <Form {...form}>
                     <form
-                        onSubmit={form.handleSubmit(onSubmit)}
                         className="space-y-6"
+                        onSubmit={form.handleSubmit(onSubmit)}
                     >
                         <FormField
                             control={form.control}
@@ -163,7 +162,7 @@ export default function SignupForm() {
                                 </FormItem>
                             )}
                         />
-                        <Button type="submit" className="w-full">
+                        <Button className="w-full" type="submit">
                             Sign up
                         </Button>
 
@@ -177,12 +176,12 @@ export default function SignupForm() {
                         </div>
 
                         <Button
+                            className="w-full"
                             type="button"
                             variant="outline"
-                            className="w-full"
                             onClick={() => signInWithGoogle()}
                         >
-                            <Mail size={16} className="mr-2" />
+                            <Mail className="mr-2" size={16} />
                             Sign up with Google
                         </Button>
                     </form>
@@ -192,8 +191,8 @@ export default function SignupForm() {
                 <p className="text-sm text-muted-foreground">
                     Already have an account?{" "}
                     <a
-                        href={CLIENT_ROUTES.LOGIN}
                         className="text-primary font-medium hover:underline"
+                        href={CLIENT_ROUTES.LOGIN}
                     >
                         Sign in
                     </a>

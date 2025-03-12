@@ -1,7 +1,10 @@
 "use client";
 
+import type { TForgotPasswordFormSchema } from "@/lib/constants";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { isEmpty } from "lodash-es";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -21,15 +24,12 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-
 import {
-    TForgotPasswordFormSchema,
     ForgotPasswordFormSchema,
     CLIENT_ROUTES,
     EServerResponseCode,
 } from "@/lib/constants";
 import { forgotPasswordAction } from "@/actions/supabase";
-import { isEmpty } from "lodash-es";
 
 export default function ForgotPasswordForm() {
     const form = useForm<TForgotPasswordFormSchema>({
@@ -70,8 +70,8 @@ export default function ForgotPasswordForm() {
             <CardContent>
                 <Form {...form}>
                     <form
-                        onSubmit={form.handleSubmit(onSubmit)}
                         className="space-y-6"
+                        onSubmit={form.handleSubmit(onSubmit)}
                     >
                         <FormField
                             control={form.control}
@@ -90,7 +90,7 @@ export default function ForgotPasswordForm() {
                                 </FormItem>
                             )}
                         />
-                        <Button type="submit" className="w-full">
+                        <Button className="w-full" type="submit">
                             Send Email
                         </Button>
                     </form>
@@ -100,8 +100,8 @@ export default function ForgotPasswordForm() {
                 <p className="text-sm text-muted-foreground">
                     Remember your password?{" "}
                     <a
-                        href={CLIENT_ROUTES.LOGIN}
                         className="text-primary font-medium hover:underline"
+                        href={CLIENT_ROUTES.LOGIN}
                     >
                         Sign in
                     </a>
