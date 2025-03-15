@@ -27,7 +27,7 @@
     pnpm migrate
     ```
     
-5. Run the development sever
+5. Run the development server
     
     ```bash
     pnpm run dev
